@@ -24,7 +24,7 @@ jobs:
   trigger-build-docs:
     name: Trigger Docs Build Workflow
     runs-on: ubuntu-latest
-    needs: update-submodule
+    needs: update_child_docs
     steps:
       - name: Trigger documentations build workflow
         run: |
