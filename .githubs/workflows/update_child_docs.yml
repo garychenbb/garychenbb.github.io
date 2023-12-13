@@ -1,0 +1,37 @@
+name: Update Child Docs on Dispatch
+
+on:
+  repository_dispatch:
+    types: [update_child_docs]
+
+jobs:
+  update_child_docs:
+    name: Update Child Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo and its child repos
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{secrets.ALL_REPOS_READ_WRITE}}
+      - name: Update submodules and push 
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
+          git config --global user.email "garychenbb@gmail.com"
+          git config --global user.name "Gary Chen"
+          git commit -am "Update submodule" && git push || echo "No changes to commit"
+  trigger-build-docs:
+    name: Trigger Docs Build Workflow
+    runs-on: ubuntu-latest
+    needs: update-submodule
+    steps:
+      - name: Trigger documentations build workflow
+        run: |
+          curl -L \
+               -X POST \
+               -H "Accept: application/vnd.github+json" \
+               -H "Authorization: Bearer ${{ secrets.ALL_REPOS_READ_WRITE }}" \
+               -H "X-GitHub-Api-Version: 2022-11-28" \
+               https://api.github.com/repos/garychenbb/garychenbb.github.io/actions/workflows/publishDocs.yml/dispatches \
+               -d '{"ref":"main"}'

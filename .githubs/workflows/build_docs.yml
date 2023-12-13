@@ -1,10 +1,10 @@
-name: ci 
+name: Build Docs
 on:
   push:
     branches:
       - main
 jobs:
-  deploy-doc:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure Git Credentials
@@ -21,7 +21,7 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material 
+      - run: pip install -r requirements.txt
       - run: mkdocs gh-deploy --force
 
 

@@ -1,1 +1,5 @@
-site_name: My Docs
+site_name: My MKDocs
+repo_url: https://github.com/garychenbb/garychenbb.github.io
+nav:
+  - Intro: 'index.md'
+  - 刻板學習: '!include docs'
